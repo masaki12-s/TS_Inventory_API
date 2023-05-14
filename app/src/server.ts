@@ -1,8 +1,8 @@
 import express from 'express';
 //sqlite3
-import { Database } from 'sqlite3';
 import dotenv from 'dotenv';
-import { open } from 'sqlite';
+import { open, Database } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
 dotenv.config();
 
@@ -12,23 +12,19 @@ const port = parseInt(_port, 10);
 // DB接続
 async function connection() {
     const db = await open({
-        filename: './db.sqlite',
-        driver: Database
+        filename: './db.sqlite3',
+        driver: sqlite3.Database
     });
+    // テーブル作成
     return db;
 };
 
-// テーブル作成
+// テーブル
 async function createTable(db: Database) {
-    await db.run('CREATE TABLE IF NOT EXISTS stock (name TEXT, amount INTEGER, price INTEGER)');
+    await db.run('CREATE TABLE IF NOT EXISTS stock (name STRING, amount INTEGER, sales REAL);');
+    //const result = await db.get('select * from sqlite_master;');
+    //console.log(result);
 }
-// もしDBがなければ作成
-async function init() {
-    const db = await connection();
-    await createTable(db);
-};
-
-init();
 
 type Stock = {
     name: string;
@@ -36,46 +32,43 @@ type Stock = {
     price: number;
 };
 
+connection().then(async (db) => {
+    await createTable(db);
 
-const app: express.Express = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+    const app: express.Express = express();
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-try {
     app.listen(port, () => {
-      console.log(`dev server running at: http://localhost:${port}/`)
-    })
-  } catch (e) {
-    if (e instanceof Error) {
-      console.error("a")
-    }
-  }
+        console.log(`Example app listening at http://localhost:${port}`);
+    });
 
-app.get('/', async (req: express.Request, res: express.Response) => {{
-    console.log("test");
-}});
+    app.get('/', async (req: express.Request, res: express.Response) => {{
+        console.log("test2");
+    }});
 
 
-// 在庫の更新, 作成
-/**
- * POST /v1/stock
- * http resuest body
- * {
- * "name": "string" (required),
- * "amount": 0 (optional),
- * }
- * 
- * http response header
- * Location: /v1/stock/:name
- * 
- * http response body
- * same as request body
-**/
-app.post('/v1/stock', async (req: express.Request, res: express.Response) => {
-    const stock = req.body;
-    const db = await connection();
-    await db.run('INSERT INTO stock (name, amount, price) VALUES (?, ?, ?)', [stock.name, stock.amount, stock.price]);
-    res.setHeader('Location', `/v1/stock/${stock.name}`);
-    res.status(201).json(stock);
+    // 在庫の更新, 作成
+    /**
+     * POST /v1/stock
+     * http resuest body
+     * {
+     * "name": "string" (required),
+     * "amount": 0 (optional),
+     * }
+     * 
+     * http response header
+     * Location: /v1/stock/:name
+     * 
+     * http response body
+     * same as request body
+    **/
+    app.post('/v1/stock', async (req: express.Request, res: express.Response) => {
+        const stock = req.body;
+        const db = await connection();
+        await db.run('INSERT INTO stock (name, amount, price) VALUES (?, ?, ?)', [stock.name, stock.amount, stock.price]);
+        res.setHeader('Location', `/v1/stock/${stock.name}`);
+        res.status(201).json(stock);
+    });
+
 });
-

@@ -26,6 +26,17 @@ DocumentRoot "/usr/local/apache2/htdocs"
 /usr/local/apache2/htdocs -> /var/www/html
 の/var/www/htmlの領域設定のAllowOverrideをNone→ALLに変更
 
+RewriteEngine on
+RewriteRule ^/secret/?$ /secret.html [L]
+
+# /secretへのアクセスは認証を要求
+<Files "secret.html">
+    AuthType Digest
+    AuthName "Digest Auth"
+    AuthUserFile "/usr/local/apache2/conf/.digestpass"
+    Require valid-user
+</Files>
+
 
 
 # 課題3
@@ -53,3 +64,5 @@ yarn add -D typescript ts-node @types/express @types/node
 ...
 }
 ```
+
+proxy, proxy_httpモジュールを有効化
