@@ -6,9 +6,10 @@ services:
       context: ./apache2
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:80:80"
+      - "80:80"
     networks:
       - app-network
+    restart: always
   # db:
   #   container_name: db
   #   image: mysql:5.7
@@ -38,6 +39,8 @@ services:
       - apache2
     networks:
       - app-network
+    restart: always
+
 networks:
   app-network:
     driver: bridge

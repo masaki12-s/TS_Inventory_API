@@ -6,6 +6,7 @@ RUN yarn install --prod --frozen-lockfile
 
 COPY ./ ./
 
+RUN yarn add typescript --dev
 
 RUN yarn build
 CMD "yarn" "start"
