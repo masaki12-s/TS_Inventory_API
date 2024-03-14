@@ -20,14 +20,21 @@ services:
       MYSQL_DATABASE: $DB_DATABASE
       MYSQL_USER: $DB_USER
       MYSQL_PASSWORD: $DB_PASSWORD
-    ports:
-      - "$DB_PORT:3306"
-    expose:
-      - "$DB_PORT"
-  app:
-    container_name: app
+    networks:
+      - app-network
+  frontend:
+    container_name: frontend
     build:
-      context: ./app
+      context: ./app/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:5173:5173"
+    networks:
+      - app-network
+  backend:
+    container_name: backend
+    build:
+      context: ./app/backend
       dockerfile: Dockerfile
       args:
         - PORT=$PORT
@@ -36,10 +43,9 @@ services:
         - DB_PORT=$DB_PORT
         - DB_PASSWORD=$DB_PASSWORD
         - DB_DATABASE=$DB_DATABASE
-    ports:
-      - "127.0.0.1:3000:3000"
-    # depends_on:
-    #   - apache2
+    depends_on:
+      - db
+      # - apache2
     networks:
       - app-network
     restart: always
