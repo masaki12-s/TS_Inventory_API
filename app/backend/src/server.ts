@@ -16,7 +16,16 @@ const connection = mysql.createConnection({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
 });
-connection.connect();
+
+// db接続確認
+connection.connect((error) => {
+    if (error) {
+        console.log('DB接続失敗', error);
+    } else {
+        console.log('DB接続成功');
+        main();
+    }
+});
 
 // テーブル
 function initializeTable(conn: mysql.Connection) {
@@ -47,10 +56,9 @@ function main() {
     initializeTable(connection);
     addTestData(connection);
     const app: express.Express = express();
-    app.use(cors({ origin: 'http://127.0.0.1:5173'}));
+    app.use(cors({ origin: 'http://frontend:5173'}));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`);
     });
@@ -253,4 +261,3 @@ function main() {
     // );
 }
 
-main();
