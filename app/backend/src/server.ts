@@ -10,9 +10,9 @@ const port = parseInt(_port, 10);
 
 // db接続
 const connection = mysql.createConnection({
-    host: "127.0.0.1",
+    host: 'db',
     user: process.env.DB_USER,
-    port: parseInt(process.env.DB_PORT||"3307", 10),
+    port: parseInt(process.env.DB_PORT||"3306", 10),
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
 });

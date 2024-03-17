@@ -36,13 +36,13 @@ services:
     build:
       context: ./app/backend
       dockerfile: Dockerfile
-      args:
-        - PORT=$PORT
-        - DB_HOST=$DB_HOST
-        - DB_USER=$DB_USER
-        - DB_PORT=$DB_PORT
-        - DB_PASSWORD=$DB_PASSWORD
-        - DB_DATABASE=$DB_DATABASE
+    environment:
+      - PORT=$PORT
+      - DB_HOST=$DB_HOST
+      - DB_USER=$DB_USER
+      - DB_PORT=$DB_PORT
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_DATABASE=$DB_DATABASE
     depends_on:
       - db
       # - apache2
