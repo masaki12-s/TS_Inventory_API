@@ -20,6 +20,8 @@ services:
       MYSQL_DATABASE: $DB_DATABASE
       MYSQL_USER: $DB_USER
       MYSQL_PASSWORD: $DB_PASSWORD
+    expose:
+      - "3306"
     networks:
       - app-network
   frontend:
@@ -46,6 +48,8 @@ services:
     depends_on:
       - db
       # - apache2
+    expose:
+      - "3000"
     networks:
       - app-network
     restart: always

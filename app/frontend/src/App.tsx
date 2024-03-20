@@ -36,10 +36,7 @@ function App() {
   return (
     <>
       <h2>Inventory App</h2>
-      <div class="container">
-        <div class="column">
         <p>在庫一覧</p>
-        a
           <ul>
             {Object.keys(stocks).map((key: any) => {
               return (
@@ -49,18 +46,15 @@ function App() {
               )
             })}
           </ul>
-        </div>
-        <div class="column">
+
           <p>在庫追加</p>
           <form action="">
-            <label for="name">商品名</label>
+            <label htmlFor="name">商品名</label>
             <input type="text" id="name" name="name" />
-            <label for="amount">個数</label>
+            <label htmlFor="amount">数量</label>
             <input type="number" id="amount" name="amount" />
-            <button onClick={() => addStock('apple', 10)}>追加</button>
+            <button onClick={() => addStock('name', 1)}>追加</button>
           </form>
-        </div>
-      </div>
     </>
   )
 }
